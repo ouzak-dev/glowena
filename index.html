@@ -9,6 +9,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
+
+        :root {
+            --primary-color: #ff6b9d;
+            --secondary-color: #c44569;
+            --text-color: #2c3e50;
+            /* ... more variables */
+        }
+        
+        body {
+            color: var(--text-color);
+        }
+        
+        .logo {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), #f8b500, var(--primary-color));
+        }
+                
+        .cta {
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta::before { /* Shimmer effect */ }
+        .cta:hover::before { /* Shimmer effect hover */ }
+        
+        .cta-header {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+        .cta-header:hover { /* specific hover */ }
+        
+        .cta-main {
+            background: linear-gradient(45deg, #ff6b9d, #c44569); /* or a different gradient if needed */
+            padding: 20px 40px; /* larger padding */
+            font-size: 1.3rem;
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.4);
+        }
+        .cta-main:hover { /* specific hover */ }
+        
         * {
             margin: 0;
             padding: 0;
@@ -1491,7 +1537,7 @@
                         <li><i class="fas fa-check"></i> خدمة عملاء 24/7</li>
                     </ul>
                 </div>
-                <div style="max-width: 500px; width: 100%; margin: 28px 8px;">
+                <div id="orderFormContainer" style="max-width: 500px; width: 100%; margin: 28px 8px;">
                     <!-- Order Form -->
                     <form class="order-form" id="orderForm" onsubmit="submitOrder(event)">
                         <div class="form-group">
@@ -1888,52 +1934,31 @@
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
         }
-
-        function submitOrder(event) {
+        // Keep this function as the onsubmit handler
+        async function submitOrder(event) {
             event.preventDefault();
-            // Get form data
             const formData = new FormData(event.target);
-            const orderData = {
-                fullName: formData.get('fullName'),
-                phoneNumber: formData.get('phoneNumber'),
-                address: formData.get('address'),
-                city: formData.get('city')
-            };
-            
+            const orderData = { /* ... */ };
+        
             // Basic validation
-            if (!orderData.fullName || !orderData.phoneNumber || !orderData.address || !orderData.city) {
+            if (!orderData.fullName /*...*/) {
                 alert('يرجى ملء جميع الحقول المطلوبة');
                 return;
             }
-            
-            // Phone number validation (Moroccan format)
             const phoneRegex = /^(06|07)\d{8}$/;
             if (!phoneRegex.test(orderData.phoneNumber)) {
                 alert('يرجى إدخال رقم هاتف صحيح (يجب أن يبدأ بـ 06 أو 07)');
                 return;
             }
-            
+        
             const orderHandler = new OrderSubmissionHandler({
                 whatsappNumber: '212648424326',
                 timeout: 15000,
                 retryAttempts: 3
             });
-
-            document.addEventListener('submit', async (event) => {
-                if (event.target.classList.contains('order-form')) {
-                    event.preventDefault();
-                    
-                    const orderData = {
-                        fullName: event.target.fullName.value,
-                        address: event.target.address.value,
-                        phoneNumber: event.target.phoneNumber.value,
-                        city: event.target.city.value
-                    };
-                    
-                    await orderHandler.handleOrderSubmission(event, orderData);
-                }
-            });
-
+        
+            // Directly call the handler
+            await orderHandler.handleOrderSubmission(event, orderData);
         }
         
         function showSuccessMessage() {
